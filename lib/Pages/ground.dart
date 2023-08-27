@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+
+import 'package:hive_flutter/hive_flutter.dart';
+import '../Sign_in_Sign_up/login.dart';
 class ground extends StatefulWidget {
 
 
@@ -12,6 +15,7 @@ class ground extends StatefulWidget {
 }
 
 class _groundState extends State<ground> {
+
 
   var all = [
     'assets/DFS/LinkList/CLL.png',
@@ -38,7 +42,6 @@ class _groundState extends State<ground> {
     'assets/OS/Sheduling/SRT.png'
   ];
   var sorting = [
-    'assets/DFS/LinkList/SLL.png',
     'assets/DFS/Sorting/BubbleSort.png',
     'assets/DFS/Sorting/SelectionSort.png',
     'assets/DFS/Sorting/BucketSort.png',
@@ -68,7 +71,7 @@ class _groundState extends State<ground> {
     'assets/OS/Sheduling/Priority.png',
     'assets/OS/Sheduling/RoundRobin.png',
     'assets/OS/Sheduling/SJF.png',
-    'assets/OS/Sheduling/STR.png'
+
   ];
 
   @override
@@ -79,9 +82,10 @@ class _groundState extends State<ground> {
 
   @override
   Widget build(BuildContext context) {
+    final Box _boxLogin = Hive.box("login");
     var data = widget.title;
     var temp=[];
-    if (data == 'Shediling') {
+    if (data == 'sheduling') {
       temp=sheduling;
     }
     else if(data=='Sorting')
@@ -102,24 +106,54 @@ class _groundState extends State<ground> {
     }
     else
       {
-        temp=all;
+        temp=sheduling;
       }
     print(temp);
+
     return Scaffold(
       appBar: AppBar(
     leading: Image.asset("assets/Images/icon.png"),
     title: Row(
     children: [
-    Image.asset("assets/Images/name.png"),
+      Text(data,style: TextStyle(color: Color(0xF5623813),fontSize: 30,fontWeight: FontWeight.bold),),
     ],
     ),
     //Text(Image.asset("assets/Images/name.png")),
-    actions: [Image.asset("assets/Images/favicon.png")],
+    //actions: [Image.asset("assets/Images/favicon.png")],
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 2),
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(color: Colors.black),
+              ),
+              child: IconButton(
+                color: Colors.black,
+                onPressed: () {
 
+                  _boxLogin.clear();
+                  _boxLogin.put("loginStatus", false);
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return const Login();
 
-    backgroundColor: Color(0xFFF4DEC6),
+                      },
+                    ),
+                  );
+                },
+                icon: const Icon(Icons.logout_rounded),
+              ),
+            ),
+          )
+        ],
+
+        backgroundColor: Color(0x89BD7840),
       ),
 
+      backgroundColor: Color(0xFFF4DEC6),
       body: Container(
         child: GridView.builder(itemBuilder: (context, index) {
           return Container(child: Image.asset(temp[index]),);
@@ -132,6 +166,7 @@ class _groundState extends State<ground> {
               mainAxisSpacing: 0,
               childAspectRatio: 2),),
       ),
+
 
     );
   }
